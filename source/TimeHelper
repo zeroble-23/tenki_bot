@@ -1,0 +1,21 @@
+function today_is_weekend(){
+  var week = new Date().getDay();
+  return (week == 0 || week == 6);
+}
+
+function time_to_current_date(time){
+  if (time != '') {
+    var current_date = new Date();
+    time.setFullYear(current_date.getFullYear());	
+    time.setMonth(current_date.getMonth());
+    time.setDate(current_date.getDate());
+  }
+  return time;
+}
+
+function is_notification_time(time, target_time){
+  var current_date = new Date(time);
+  var target_date = new Date(target_time);
+  var target_date_threshold = new Date(target_date.getTime() + 15 * 60000);
+  return (current_date >= target_date && current_date < target_date_threshold);
+}

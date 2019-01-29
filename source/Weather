@@ -1,0 +1,22 @@
+// @return array から配列１週間の天気情報が入った配列を返す
+
+var Weather = function(uri){
+  var weather = this;
+  weather.uri = uri;
+  
+  this.fetch_weather_json = function() {
+    try {
+      return JSON.parse(UrlFetchApp.fetch(weather.uri,{}));
+    }
+    catch (e) {
+      Logger.log('JSONの取得で例外が発生しました');
+    }
+  }
+  
+  this.get_tomorrow_weather = function (){
+    var forecast = weather.fetch_weather_json();
+    var week_weather_json_key  = 'daily';
+    var tomorrow_weather_index = 1;
+    return filter_json(forecast, week_weather_json_key).data[tomorrow_weather_index];
+  }
+}

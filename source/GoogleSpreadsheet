@@ -1,0 +1,30 @@
+var GoogleSpreadsheet = function (id, sheet_name) {
+  var google_spreadsheet = this;
+  google_spreadsheet.id = id;
+  google_spreadsheet.name = sheet_name;
+  google_spreadsheet.app = SpreadsheetApp.openById(google_spreadsheet.id);
+  google_spreadsheet.sheet = google_spreadsheet.app.getSheetByName(google_spreadsheet.name);
+
+  this.update = function (values){
+    for (var key in values){
+      if (values.hasOwnProperty(key)){
+         google_spreadsheet.write_value_in_cell(key, values[key]);
+      }
+    }
+  }
+  this.write_value_in_cell = function(range, value){
+    google_spreadsheet.sheet.getRange(range).setValue(value);
+  }
+  this.get_values = function (range) {
+    return google_spreadsheet.app.getRange(range).getValues();
+  }
+  this.get_notification_values = function (range) {
+    values = google_spreadsheet.get_values(range);
+    return {
+      'address':values[0][0],                         // Cell B2
+      'icon':values[1][5],                            // Cell C7
+      'time':time_to_current_date(values[2][0]),      // Cell B4
+      'message':values[5][3]                          // Cell E7
+    }
+  }
+}

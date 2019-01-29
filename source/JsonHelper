@@ -1,0 +1,7 @@
+function filter_json(json, key) {
+     if (typeof json[key] === undefined) {
+      Logger.log('jsonのフィルターに失敗しました。 key:' + key);
+      return [];
+    }
+    return json[key];
+}

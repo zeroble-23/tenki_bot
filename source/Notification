@@ -1,0 +1,11 @@
+var Notification = function (values) {
+  var notification = this;
+  notification.time = values.time;
+  notification.address = values.address;
+  notification.message = values.message;
+  
+  this.send = function (){
+    current_time = new Date();
+    GmailApp.sendEmail(notification.address, '', notification.message);
+  }
+}

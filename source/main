@@ -1,0 +1,47 @@
+coordinatescoordinates
+function main() {
+  // 週末は何もしない
+  if (today_is_weekend()) return;
+
+  // Spreadsheetの情報
+  var spreadsheet_id      = '{SpreadsheetID}';
+  var sheet_name          = '{name}';
+  var sheet_values_range  = 'XX:XX';
+
+  // DarkSkyのAPI設定 https://darksky.net/dev
+  var api_key             = 'xxxxxxxxxxxxxxxxxxxxxx';
+  var coordinates         = 'x,y'; // エリアの座標
+  var api_url             = 'https://api.darksky.net/forecast/' + api_key +  '/' + coordinates + '?lang=ja&units=si';
+  var now = new Date();
+
+  var tomorrow_weather = new Weather(api_url).get_tomorrow_weather();
+
+  try {
+    if (tomorrow_weather.summary !== undefined && tomorrow_weather.icon !== undefined) {
+      var values_to_update = {
+        'B7' : tomorrow_weather.summary,
+        'C7' : tomorrow_weather.icon
+      };
+      var weather_spreadsheet = new GoogleSpreadsheet(spreadsheet_id, sheet_name);
+      weather_spreadsheet.update(values_to_update);
+
+      var weather_spreadsheet_values = weather_spreadsheet.get_notification_values(sheet_values_range);
+      if (is_notification_time(now, weather_spreadsheet_values.time)){
+          try{
+            var notification = new Notification(weather_spreadsheet_values);
+            notification.send();
+          }
+          catch (e) {
+            Logger.log(e);
+            return;
+          }
+      }
+    } else {
+      Logger.log('天気情報の取得に失敗しました。');
+      return;
+    }
+  } catch (e) {
+    Logger.log(e);
+    return;
+  }
+}
